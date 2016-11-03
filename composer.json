@@ -1,12 +1,16 @@
 {
     "name": "dimazzzz/build-url",
     "description": "OOP URL builder",
+    "license": "MIT",
     "authors": [
         {
             "name": "Dmitriy Zhavoronkov",
             "email": "dimaz.lark@gmail.com"
         }
     ],
-    "require": {},
-    "license": "MIT"
+    "autoload": {
+        "psr-4": {
+            "DimazzzZ\\": "."
+        }
+    }
 }
