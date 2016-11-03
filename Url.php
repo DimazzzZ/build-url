@@ -61,10 +61,12 @@ class Url extends Url\Generic
     /**
      * Set scheme name (http, https, market, ftp etc.)
      * @param string $value Value
+     * @return $this
      */
     public function setScheme($value)
     {
         $this->setProperty('scheme', $value);
+        return $this;
     }
 
     /**
@@ -79,10 +81,12 @@ class Url extends Url\Generic
     /**
      * Set host (domain) name
      * @param string $value Value
+     * @return $this
      */
     public function setHost($value)
     {
         $this->setProperty('host', $value);
+        return $this;
     }
 
     /**
@@ -97,10 +101,12 @@ class Url extends Url\Generic
     /**
      * Set port
      * @param string $value Value
+     * @return $this
      */
     public function setPort($value)
     {
         $this->setProperty('port', $value);
+        return $this;
     }
 
     /**
@@ -115,10 +121,12 @@ class Url extends Url\Generic
     /**
      * Set user name
      * @param string $value Value
+     * @return $this
      */
     public function setUser($value)
     {
         $this->setProperty('user', $value);
+        return $this;
     }
 
     /**
@@ -133,10 +141,12 @@ class Url extends Url\Generic
     /**
      * Set password
      * @param string $value Value
+     * @return $this
      */
     public function setPassword($value)
     {
         $this->setProperty('pass', $value);
+        return $this;
     }
 
     /**
@@ -151,10 +161,12 @@ class Url extends Url\Generic
     /**
      * Set path
      * @param string $value Value
+     * @return $this
      */
     public function setPath($value)
     {
         $this->setProperty('path', $value);
+        return $this;
     }
 
     /**
@@ -170,6 +182,7 @@ class Url extends Url\Generic
      * Set query key-value
      * @param string|array $key Key name or an array of key-value pairs
      * @param string|null  $value
+     * @return $this
      */
     public function setQuery($key, $value = null)
     {
@@ -180,6 +193,8 @@ class Url extends Url\Generic
         } else {
             $this->getQuery()->add($key, $value);
         }
+
+        return $this;
     }
 
     /**
@@ -194,10 +209,12 @@ class Url extends Url\Generic
     /**
      * Set anchor
      * @param string $value Value
+     * @return $this
      */
     public function setAnchor($value)
     {
         $this->setProperty('fragment', $value);
+        return $this;
     }
 
     /**
