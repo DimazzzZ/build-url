@@ -43,9 +43,9 @@ class Url extends Url\Generic
     public function __construct($url = null)
     {
         $this->originalString = $url;
-        $this->parsed         = ($url === null) ? [] : parse_url($url);
+        $this->parsed = ($url === null) ? [] : parse_url($url);
 
-        $query             = $this->getProperty('query');
+        $query = $this->getProperty('query');
         $this->parsedQuery = new Query($query);
     }
 
@@ -367,6 +367,13 @@ class Url extends Url\Generic
             }
         }
 
-        return $scheme . ((isset($parse_url['user'])) ? $parse_url['user'] . ((isset($parse_url['pass'])) ? ':' . $parse_url['pass'] : '') . '@' : '') . ((isset($parse_url['host'])) ? $parse_url['host'] : '') . ((isset($parse_url['port'])) ? ':' . $parse_url['port'] : '') . ((isset($parse_url['path'])) ? $parse_url['path'] : '') . ((isset($parse_url['query'])) ? '?' . $parse_url['query'] : '') . ((isset($parse_url['fragment'])) ? '#' . $parse_url['fragment'] : '');
+        $userPass = ((isset($parse_url['user'])) ? $parse_url['user'] . ((isset($parse_url['pass'])) ? ':' . $parse_url['pass'] : '') . '@' : '');
+        $host = ((isset($parse_url['host'])) ? $parse_url['host'] : '');
+        $port = ((isset($parse_url['port'])) ? ':' . $parse_url['port'] : '');
+        $path = ((isset($parse_url['path'])) ? $parse_url['path'] : '');
+        $query = ((isset($parse_url['query']) && !empty($parse_url['query'])) ? '?' . $parse_url['query'] : '');
+        $fragment = ((isset($parse_url['fragment'])) ? '#' . $parse_url['fragment'] : '');
+
+        return $scheme . $userPass . $host . $port . $path . $query . $fragment;
     }
 }
