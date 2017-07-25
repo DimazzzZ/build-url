@@ -253,6 +253,9 @@ class Url extends Url\Generic
 
         // Path can be set by default
         $params['path'] = $this->getPath() !== false ? $this->getPath() : '/';
+        if ($params['scheme'] === 'market' && $this->getPath() === false) {
+            $params['path'] = '';
+        }
 
         return self::join($this->originalString, $params);
     }
