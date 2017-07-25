@@ -8,7 +8,7 @@
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ\Url;
+namespace DimazzzZ\UrlBuilder;
 
 /**
  * Class Exception

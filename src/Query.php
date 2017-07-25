@@ -8,37 +8,26 @@
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ\Url;
+namespace DimazzzZ\UrlBuilder;
 
 /**
  * Class Query
  * @package DimazzzZ\Url
  */
-class Query extends Generic
+class Query
 {
+    /**
+     * @var array
+     */
+    protected $parsed = [];
+
     /**
      * Query constructor.
      * @param string $queryString
      */
     public function __construct($queryString)
     {
-        $this->originalString = $queryString;
-        $this->parseString($queryString);
-    }
-
-    /**
-     * Parse query string
-     * @param $string
-     */
-    private function parseString($string)
-    {
-        $pairs = explode('&', $string);
-        $pairs = array_filter($pairs);
-
-        foreach ($pairs as $pair) {
-            @list($key, $value) = explode('=', $pair);
-            $this->parsed[$key] = $value;
-        }
+        $this->parsed = $this->parse($queryString);
     }
 
     /**
@@ -48,7 +37,7 @@ class Query extends Generic
      */
     public function get($name)
     {
-        return $this->getProperty($name);
+        return isset($this->parsed[$name]) ? $this->parsed[$name] : false;
     }
 
     /**
@@ -69,7 +58,7 @@ class Query extends Generic
      */
     public function __toString()
     {
-        return $this->originalString;
+        return self::join($this->parsed);
     }
 
     /**
@@ -91,5 +80,24 @@ class Query extends Generic
         }
 
         return implode('&', $result);
+    }
+
+    /**
+     * Parse query string
+     * @param string $string
+     * @return array
+     */
+    private function parse($string)
+    {
+        $result = [];
+        $pairs  = explode('&', $string);
+        $pairs  = array_filter($pairs);
+
+        foreach ($pairs as $pair) {
+            @list($key, $value) = explode('=', $pair);
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }

@@ -2,22 +2,22 @@
 /**
  * Project: build-url
  * Date: 02.11.15
- * Time: 11:14
+ * Time: 11:49
  * @author  Dmitriy Zhavoronkov <dimaz.lark@gmail.com>
  * @license MIT
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ;
+namespace DimazzzZ\Schemes;
 
 use DimazzzZ\Url\Exception;
 use DimazzzZ\Url\Query;
 
 /**
- * Class Url
- * @package DimazzzZ
+ * Class Generic
+ * @package DimazzzZ\Url
  */
-class Url extends Url\Generic
+abstract class Generic
 {
     const HTTP_URL_REPLACE        = 1;    // Replace every part of the first URL when there's one of the second URL
     const HTTP_URL_JOIN_PATH      = 2;    // Join relative paths
@@ -30,6 +30,18 @@ class Url extends Url\Generic
     const HTTP_URL_STRIP_QUERY    = 256;  // Strip query string
     const HTTP_URL_STRIP_FRAGMENT = 512;  // Strip any fragments (#identifier)
     const HTTP_URL_STRIP_ALL      = 1024; // Strip anything but scheme and host
+
+    /**
+     * Original query string
+     * @var string
+     */
+    protected $originalString;
+
+    /**
+     * Parsed string
+     * @var array
+     */
+    protected $parsed = [];
 
     /**
      * @var Query
@@ -47,6 +59,58 @@ class Url extends Url\Generic
 
         $query             = $this->getProperty('query');
         $this->parsedQuery = new Query($query);
+    }
+
+    /**
+     * Get query
+     * @param $name
+     * @return bool|string
+     */
+    public function getProperty($name)
+    {
+        if ($this->propertyExist($name)) {
+            return $this->parsed[$name];
+        }
+
+        return false;
+    }
+
+    /**
+     * Set property
+     * @param string $name  Property name
+     * @param string $value Property value
+     */
+    protected function setProperty($name, $value)
+    {
+        $this->parsed[$name] = $value;
+    }
+
+    /**
+     * Get all properties as array
+     * @return array
+     */
+    public function getProperties()
+    {
+        return $this->parsed;
+    }
+
+    /**
+     * Check param exist
+     * @param $name
+     * @return bool
+     */
+    public function propertyExist($name)
+    {
+        return isset($this->parsed[$name]) ? true : false;
+    }
+
+    /**
+     * Return original string
+     * @return string
+     */
+    public function getOriginalString()
+    {
+        return $this->originalString;
     }
 
     /**
@@ -171,7 +235,7 @@ class Url extends Url\Generic
 
     /**
      * Get query string
-     * @return bool|Query
+     * @return Query
      */
     public function getQuery()
     {
@@ -215,46 +279,6 @@ class Url extends Url\Generic
     {
         $this->setProperty('fragment', $value);
         return $this;
-    }
-
-    /**
-     * Build URL and return as a string
-     * @return string
-     * @throws Exception
-     */
-    public function build()
-    {
-        $params = ['query' => Query::join($this->getQuery()->getProperties())];
-
-        // Scheme can be set by default
-        $params['scheme'] = $this->getScheme() !== false ? $this->getScheme() : 'http';
-
-        // Host must be provided
-        if ($this->getHost() !== false) {
-            $params['host'] = $this->getHost();
-        } else {
-            throw new Exception('No host provided');
-        }
-
-        // Port number is optional
-        if ($this->getPort() !== false) {
-            $params['port'] = $this->getPort();
-        }
-
-        // Set username
-        if ($this->getUser() !== false) {
-            $params['user'] = $this->getUser();
-        }
-
-        // Set user password
-        if ($this->getPassword() !== false) {
-            $params['pass'] = $this->getPassword();
-        }
-
-        // Path can be set by default
-        $params['path'] = $this->getPath() !== false ? $this->getPath() : '/';
-
-        return self::join($this->originalString, $params);
     }
 
     /**
@@ -334,7 +358,8 @@ class Url extends Url\Generic
             if (isset($parts['path']) && ($flags & self::HTTP_URL_JOIN_PATH)) {
                 if (isset($parse_url['path'])) {
                     $parse_url['path'] = rtrim(
-                            str_replace(basename($parse_url['path']), '', $parse_url['path']), '/'
+                            str_replace(basename($parse_url['path']), '', $parse_url['path']),
+                            '/'
                         ) . '/' . ltrim($parts['path'], '/');
                 } else {
                     $parse_url['path'] = $parts['path'];
