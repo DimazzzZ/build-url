@@ -188,10 +188,10 @@ class Builder extends Url\Generic
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
-                $this->getQuery()->add($k, $v);
+                $this->getQuery()->set($k, $v);
             }
         } else {
-            $this->getQuery()->add($key, $value);
+            $this->getQuery()->set($key, $value);
         }
 
         return $this;

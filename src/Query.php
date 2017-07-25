@@ -46,7 +46,7 @@ class Query
      * @param string $value Key value
      * @return $this
      */
-    public function add($key, $value)
+    public function set($key, $value)
     {
         $this->parsed[$key] = $value;
         return $this;
