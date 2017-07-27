@@ -8,16 +8,16 @@
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ\Schemes;
+namespace DimazzzZ\UrlBuilder\Schemes;
 
-use DimazzzZ\Url\Exception;
-use DimazzzZ\Url\Query;
+use DimazzzZ\UrlBuilder\Exception;
+use DimazzzZ\UrlBuilder\Query;
 
 /**
  * Class Generic
  * @package DimazzzZ\Url
  */
-abstract class Generic
+abstract class Generic implements SchemeInterface
 {
     const HTTP_URL_REPLACE        = 1;    // Replace every part of the first URL when there's one of the second URL
     const HTTP_URL_JOIN_PATH      = 2;    // Join relative paths

@@ -8,17 +8,39 @@
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ\Schemes;
+namespace DimazzzZ\UrlBuilder\Schemes;
 
-use DimazzzZ\Url\Exception;
-use DimazzzZ\Url\Query;
+use DimazzzZ\UrlBuilder\Exception;
+use DimazzzZ\UrlBuilder\Query;
 
 /**
  * Class Market
  * @package DimazzzZ\Schemes
  */
-class Market extends Generic implements SchemeInterface
+class Market extends Generic
 {
+    const SCHEME_NAME = 'market';
+
+    /**
+     * @see https://developer.android.com/distribute/marketing-tools/linking-to-google-play.html?hl=ru#UriSummary
+     * @see https://www.iana.org/assignments/uri-schemes/prov/market
+     * @var array
+     */
+    protected $urlMasks = [
+        'store/apps/details'    => 'details',
+        'store/apps/dev'        => 'dev',
+        'store/search'          => 'search',
+        'store/apps/collection' => 'apps',
+    ];
+
+    /**
+     * @inheritdoc
+     */
+    public function getScheme()
+    {
+        return static::SCHEME_NAME;
+    }
+
     /**
      * Build URL and return as a string
      * @return string
@@ -26,36 +48,27 @@ class Market extends Generic implements SchemeInterface
      */
     public function build()
     {
-        $params = ['query' => Query::join($this->getQuery()->getProperties())];
+        $path = $this->getPath() !== false ? $this->getPath() : 'details';
 
-        // Scheme can be set by default
-        $params['scheme'] = $this->getScheme() !== false ? $this->getScheme() : 'http';
-
-        // Host must be provided
-        if ($this->getHost() !== false) {
-            $params['host'] = $this->getHost();
-        } else {
-            throw new Exception('No host provided');
+        foreach ($this->urlMasks as $urlMask => $value) {
+            if (strpos($path, $urlMask) !== false) {
+                if ($value == 'apps') {
+                    $path = $value . '' . str_replace($urlMask, 'collection', $path);
+                } else {
+                    $path = $value;
+                }
+            }
         }
 
-        // Port number is optional
-        if ($this->getPort() !== false) {
-            $params['port'] = $this->getPort();
+        $query = Query::join($this->getQuery()->getProperties());
+
+        $url = $this->getScheme() . '://';
+        $url .= $path;
+
+        if (!empty($query)) {
+            $url .= '?' . Query::join($this->getQuery()->getProperties());
         }
 
-        // Set username
-        if ($this->getUser() !== false) {
-            $params['user'] = $this->getUser();
-        }
-
-        // Set user password
-        if ($this->getPassword() !== false) {
-            $params['pass'] = $this->getPassword();
-        }
-
-        // Path can be set by default
-        $params['path'] = $this->getPath() !== false ? $this->getPath() : '/';
-
-        return self::join($this->originalString, $params);
+        return $url;
     }
 }

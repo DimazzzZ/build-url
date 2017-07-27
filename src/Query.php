@@ -82,6 +82,11 @@ class Query
         return implode('&', $result);
     }
 
+    public function getProperties()
+    {
+        return $this->parsed;
+    }
+
     /**
      * Parse query string
      * @param string $string

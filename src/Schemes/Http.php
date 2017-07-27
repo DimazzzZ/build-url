@@ -17,7 +17,7 @@ use DimazzzZ\UrlBuilder\Query;
  * Class Http
  * @package DimazzzZ\Schemes
  */
-class Http extends Generic implements SchemeInterface
+class Http extends Generic
 {
     /**
      * Build URL and return as a string

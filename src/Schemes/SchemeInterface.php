@@ -8,7 +8,7 @@
  * @link    http://screensider.com/
  */
 
-namespace DimazzzZ\Schemes;
+namespace DimazzzZ\UrlBuilder\Schemes;
 
 interface SchemeInterface
 {
